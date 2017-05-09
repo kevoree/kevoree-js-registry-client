@@ -13,7 +13,8 @@
     "build-prod": "npm run clean-dist && NODE_ENV=production npm run webpack-build-prod",
     "webpack": "./node_modules/.bin/webpack-dev-server --progress --colors --hot --inline",
     "webpack-build": "./node_modules/.bin/webpack --progress",
-    "webpack-build-prod": "./node_modules/.bin/webpack --progress -p"
+    "webpack-build-prod": "./node_modules/.bin/webpack --progress -p",
+		"prepublish": "npm run build-prod"
   },
   "keywords": [
     "kevoree",
