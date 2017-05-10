@@ -3,7 +3,7 @@ const { resolve } = require('path');
 const webpack = require('webpack');
 
 const config = {
-	entry: resolve('src', 'index.js'),
+	entry: resolve('dist', 'main', 'index.js'),
 	output: {
 		filename: 'kevoree-registry-client.js',
 		library: 'KevoreeRegistryClient',

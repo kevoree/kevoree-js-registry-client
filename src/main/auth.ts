@@ -1,21 +1,30 @@
-const fetch = require('./util/fetch-wrapper');
-const config = require('./util/config');
-const qsEncode = require('./util/qs-encode');
+import fetch from './util/fetch-wrapper';
+import config, {
+	baseUrl, clientAuthorization, isTokenExpired, token
+} from './util/config';
+import qsEncode from './util/qs-encode';
 
-function oauthToken(body) {
+interface AOuthToken {
+	access_token: string;
+	refresh_token: string;
+	expires_in: number;
+}
+
+function oauthToken(body: {}) {
 	return () => {
-		body.client_id = config.get('registry.oauth.client_id');
-		body.client_secret = config.get('registry.oauth.client_secret');
-
-		return fetch(`${config.baseUrl()}/oauth/token`, {
+		return fetch<AOuthToken>(`${baseUrl()}/oauth/token`, {
 			method: 'POST',
-			body: qsEncode(body),
+			body: qsEncode({
+				client_id: config.get('registry.oauth.client_id'),
+				client_secret: config.get('registry.oauth.client_secret'),
+				...body
+			}),
 			headers: {
 				'Content-Type': 'application/x-www-form-urlencoded',
 				'Accept': 'application/json',
-				'Authorization': `Basic ${config.clientAuthorization()}`
+				'Authorization': `Basic ${clientAuthorization()}`
 			},
-		}).then(function (data) {
+		}).then((data: AOuthToken) => {
 			config.set('user.access_token', data.access_token);
 			config.set('user.refresh_token', data.refresh_token);
 			const expiredAt = new Date();
@@ -35,18 +44,18 @@ function createLoginRequest() {
 	});
 }
 
-module.exports = {
+export default {
 	login() {
 		return new Promise((resolve, reject) => {
 			// if this does not throw => then we are already logged-in
 			try {
-				config.token();
+				token();
 				resolve();
 			} catch (err) {
 				reject(err);
 			}
 		}).catch(() => {
-			if (config.isTokenExpired()) {
+			if (isTokenExpired()) {
 				// access_token expired
 				return this.refresh()
 					// if the refresh process failed => retry login

@@ -1,6 +1,6 @@
-const assert = require('chai').assert;
+import { assert } from 'chai';
+import * as api from '../main';
 const conf = require('tiny-conf');
-const api = require('../../src');
 
 conf.set({
 	registry: {

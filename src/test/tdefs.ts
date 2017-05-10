@@ -1,6 +1,6 @@
-const assert = require('chai').assert;
+import { assert } from 'chai';
+import * as api from '../main';
 const conf = require('tiny-conf');
-const api = require('../../src');
 
 conf.set({
 	registry: {
@@ -28,7 +28,7 @@ describe('TypeDefinitions', function () {
 	it('retrieve all tdefs', () => {
 		return api.tdef.all()
 			.then((tdefs) => {
-				assert.equal(tdefs.length, 17);
+				assert.equal(tdefs.length, 8);
 			});
 	});
 

@@ -1,6 +1,6 @@
-const assert = require('chai').assert;
+import { assert } from 'chai';
+import * as api from '../main';
 const conf = require('tiny-conf');
-const api = require('../../src');
 
 conf.set({
 	registry: {
@@ -54,12 +54,14 @@ describe('DeployUnits', function () {
 			.then((dus) => {
 				assert.equal(dus.length, 3);
 				const js = dus.find(du => du.platform === 'js');
+				assert.isNotNull(js);
+				assert.equal(js!.version, filters.js);
 				const java = dus.find(du => du.platform === 'java');
+				assert.isNotNull(java);
+				assert.equal(java!.version, '3.0.0');
 				const dotnet = dus.find(du => du.platform === 'dotnet');
-
-				assert.equal(js.version, filters.js);
-				assert.equal(java.version, '3.0.0');
-				assert.equal(dotnet.version, '5.4.0-SNAPSHOT');
+				assert.isNotNull(dotnet);
+				assert.equal(dotnet!.version, '5.4.0-SNAPSHOT');
 			});
 	});
 
