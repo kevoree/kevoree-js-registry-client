@@ -3,6 +3,7 @@
   "version": "1.0.0-alpha",
   "description": "A library to communicate with a Kevoree registry REST API",
   "main": "dist/index",
+	"typings": "dist/decl/index.d.ts",
   "scripts": {
     "test": "npm run build && npm run mocha && npm run karma",
     "mocha": "mocha build/test",
