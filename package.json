@@ -1,7 +1,7 @@
 {
   "name": "kevoree-registry-client",
-  "version": "3.0.0-alpha",
-  "description": "Client REST API to communicate with a Kevoree registry",
+  "version": "1.0.0-alpha",
+  "description": "A library to communicate with a Kevoree registry REST API",
   "main": "dist/index",
   "scripts": {
     "test": "npm run build && npm run mocha && npm run karma",
