@@ -1,9 +1,9 @@
 {
 	"name": "kevoree-registry-client",
-	"version": "1.0.0-alpha",
+	"version": "1.0.0-alpha.0",
 	"description": "A library to communicate with a Kevoree registry REST API",
-	"main": "dist/index",
-	"typings": "dist/decl/index.d.ts",
+	"main": "build/main/index.js",
+	"typings": "build/decl/index.d.ts",
 	"scripts": {
 		"test": "npm run build && npm run mocha && npm run karma",
 		"mocha": "mocha build/test",
