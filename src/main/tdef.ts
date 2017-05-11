@@ -21,6 +21,10 @@ export default {
 		return fetch<ITypeDefinition>(`${baseUrl()}/api/tdefs/${id}`);
 	},
 
+	getAllByNamespace(namespace: string) {
+		return fetch<ITypeDefinition[]>(`${baseUrl()}/api/namespaces/${namespace}/tdefs`);
+	},
+
 	getAllByNamespaceAndName(namespace: string, name: string) {
 		return fetch<ITypeDefinition[]>(`${baseUrl()}/api/namespaces/${namespace}/tdefs/${name}`);
 	},
