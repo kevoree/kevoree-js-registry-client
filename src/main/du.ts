@@ -50,7 +50,7 @@ export default {
 			.then(dus => dus[0]);
 	},
 
-	getLatestReleaseByPlatform(namespace: string, tdefName: string, tdefVersion: number, platform: string): Promise<IDeployUnit> {
+	getReleaseByPlatform(namespace: string, tdefName: string, tdefVersion: number, platform: string): Promise<IDeployUnit> {
 		return fetch<IDeployUnit[]>(`${baseUrl()}/api/namespaces/${namespace}/tdefs/${tdefName}/${tdefVersion}/dus?version=release&platform=${platform}`)
 			.then(dus => dus[0]);
 	},

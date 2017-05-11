@@ -1,4 +1,4 @@
 build/**
-!build/main
-!build/browser
-!build/decl
+!build/main/**
+!build/browser/**
+!build/decl/**

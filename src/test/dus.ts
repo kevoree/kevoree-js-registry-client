@@ -111,7 +111,7 @@ describe('DeployUnits', function () {
 	});
 
 	it('retrieve the latest release du targetting "java" for kevoree.Ticker/3', () => {
-		return api.du.getLatestReleaseByPlatform('kevoree', 'Ticker', 3, 'java')
+		return api.du.getReleaseByPlatform('kevoree', 'Ticker', 3, 'java')
 			.then((du) => {
 				assert.ok(du.id);
 				assert.equal(du.name, 'org.kevoree.library.java.toys');
