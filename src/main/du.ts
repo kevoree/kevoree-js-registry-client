@@ -48,7 +48,7 @@ export default {
 		});
 	},
 
-	delete(id: number) {
+	delete(id: number): Promise<Response> {
 		return fetch(`${baseUrl()}/api/dus/${id}`, {
 			method: 'DELETE',
 			headers: {

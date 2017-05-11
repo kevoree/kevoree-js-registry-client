@@ -3,13 +3,13 @@ const { resolve } = require('path');
 const webpack = require('webpack');
 
 const config = {
-	entry: resolve('dist', 'main', 'index.js'),
+	entry: resolve('build', 'main', 'index.js'),
 	output: {
 		filename: 'kevoree-registry-client.js',
 		library: 'KevoreeRegistryClient',
 		libraryTarget: 'umd',
-		path: resolve('dist'),
-		publicPath: '/dist/',
+		path: resolve('build', 'browser'),
+		publicPath: '/build/browser/',
 		pathinfo: true,
 	},
 	module: {
@@ -25,9 +25,7 @@ const config = {
 	plugins: []
 };
 
-if (process.env.NODE_ENV === 'production') {
-	config.plugins.push(new webpack.optimize.UglifyJsPlugin({}));
-} else {
+if (process.env.NODE_ENV !== 'production') {
 	config.plugins.push(new webpack.HotModuleReplacementPlugin());
 	config.devtool = 'source-map';
 }

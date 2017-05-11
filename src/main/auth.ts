@@ -10,6 +10,14 @@ interface AOuthToken {
 	expires_in: number;
 }
 
+export interface IUser {
+	login: string;
+	password: string;
+	access_token?: string;
+	refresh_token?: string;
+	expires_at?: number;
+}
+
 function oauthToken(body: {}) {
 	return () => {
 		return fetch<AOuthToken>(`${baseUrl()}/oauth/token`, {
@@ -25,60 +33,66 @@ function oauthToken(body: {}) {
 				'Authorization': `Basic ${clientAuthorization()}`
 			},
 		}).then((data: AOuthToken) => {
-			config.set('user.access_token', data.access_token);
-			config.set('user.refresh_token', data.refresh_token);
+			const user: IUser = config.get('user');
 			const expiredAt = new Date();
 			expiredAt.setSeconds(expiredAt.getSeconds() + data.expires_in);
-			config.set('user.expires_at', expiredAt.getTime());
+			user.access_token = data.access_token;
+			user.refresh_token = data.refresh_token;
+			user.expires_at = expiredAt.getTime();
 		});
 	};
 }
 
 function createLoginRequest() {
-	const user = config.get('user');
-	return oauthToken({
-		username: user.login,
-		password: user.password,
-		grant_type: 'password',
-		scope: 'read%20write'
-	});
+	const user: IUser = config.get('user');
+	if (user) {
+		return oauthToken({
+			username: user.login,
+			password: user.password,
+			grant_type: 'password',
+			scope: 'read%20write'
+		});
+	} else {
+		return () => {
+			return Promise.reject(new Error('Unable to find "user" in local config'))
+		};
+	}
 }
 
 export default {
 	login() {
-		return new Promise((resolve, reject) => {
-			// if this does not throw => then we are already logged-in
-			try {
+		return Promise.resolve()
+			.then(() => {
 				token();
-				resolve();
-			} catch (err) {
-				reject(err);
-			}
-		}).catch(() => {
-			if (isTokenExpired()) {
-				// access_token expired
-				return this.refresh()
-					// if the refresh process failed => retry login
-					.catch(createLoginRequest());
-			} else {
-				// no token at all
-				return createLoginRequest()();
-			}
-		});
+				if (isTokenExpired()) {
+					// access_token expired
+					return this.refresh()
+						// if the refresh process failed => retry login
+						.catch(createLoginRequest());
+				} else {
+					// user is logged-in
+					return;
+				}
+			})
+			.catch(createLoginRequest());
 	},
 	logout() {
 		throw new Error('api.auth.logout() is not implemented yet');
 	},
 	refresh() {
-		const refreshToken = config.get('user.refresh_token');
-		if (refreshToken) {
-			return oauthToken({
-				grant_type: 'refresh_token',
-				refresh_token: refreshToken,
-				scope: 'read%20write'
-			})();
+		const user: IUser = config.get('user');
+		if (user) {
+			if (user.refresh_token) {
+				return oauthToken({
+					grant_type: 'refresh_token',
+					refresh_token: user.refresh_token,
+					scope: 'read%20write'
+				})();
+			} else {
+				return Promise.reject(new Error(`Invalid refresh_token: ${user.refresh_token}`));
+			}
 		} else {
-			return Promise.reject(new Error(`Invalid refresh_token: ${refreshToken}`));
+			return Promise.reject(new Error(`Unable to find "user" in local config`));
 		}
 	}
 };

@@ -1,3 +1,5 @@
-export default function btoa(binary: string) {
+function btoa(binary: string) {
 	return new Buffer(binary).toString('base64');
-};
+}
+
+export = btoa;

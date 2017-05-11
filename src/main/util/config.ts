@@ -1,25 +1,24 @@
+const config: ITinyConf = require('tiny-conf');
+const btoa = require('./btoa');
+
 export interface ITinyConf {
 	get(key: string): any;
 	set(value: any): void;
 	set(key: string, value: any): void;
 }
 
-const config: ITinyConf = require('tiny-conf');
-import btoa from './btoa';
-
 // augment tiny-conf with some utility methods:
-export function token() {
-	const auth = config.get('user');
-	if (!isTokenExpired()) {
-		// there is a valid token
-		return auth.access_token;
+export function token(): string {
+	const token = config.get('user.access_token');
+	if (token) {
+		return token;
 	}
-	throw new Error(`Current user is not authenticated with ${baseUrl()}`);
+	throw new Error('Unable to find a valid token');
 }
 
 export function isTokenExpired() {
-	const auth = config.get('user');
-	return !auth || !auth.access_token || !auth.expires_at || auth.expires_at <= Date.now();
+	const user = config.get('user');
+	return !user || !user.access_token || !user.expires_at || user.expires_at <= Date.now();
 }
 
 export function baseUrl() {

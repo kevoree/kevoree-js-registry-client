@@ -10,6 +10,10 @@ export default class KevoreeRegistryClientError extends Error {
 		(<any> Object).setPrototypeOf(this, KevoreeRegistryClientError.prototype);
 		this.name = 'KevoreeRegistryClientError';
 		this.response = response;
-		Error.captureStackTrace(this, this.constructor);
+		if (typeof Error.captureStackTrace === 'function') {
+			Error.captureStackTrace(this, this.constructor);
+		} else {
+			this.stack = (new Error()).stack;
+		}
 	}
 }

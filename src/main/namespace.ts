@@ -31,7 +31,7 @@ export default {
 		});
 	},
 
-	delete(name: string) {
+	delete(name: string): Promise<Response> {
 		return fetch(`${baseUrl()}/api/namespaces/${name}`, {
 			method: 'DELETE',
 			headers: {

@@ -44,7 +44,7 @@ export default {
 		});
 	},
 
-	delete(id: number) {
+	delete(id: number): Promise<Response> {
 		return fetch(`${baseUrl()}/api/tdefs/${id}`, {
 			method: 'DELETE',
 			headers: {

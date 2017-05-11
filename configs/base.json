@@ -3,7 +3,7 @@
 		"target": "es6",
 		"module": "commonjs",
 		"moduleResolution": "node",
-		"declaration": true,
+		"sourceMap": true,
 		"removeComments": true,
 		"importHelpers": true,
 		"strict": true,
@@ -11,8 +11,6 @@
 		"noUnusedParameters": true,
 		"noImplicitReturns": true,
 		"allowSyntheticDefaultImports": true,
-		"inlineSourceMap": true,
-		"inlineSources": true,
 		"experimentalDecorators": true,
 		"emitDecoratorMetadata": true
 	}

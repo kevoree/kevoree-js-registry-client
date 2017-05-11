@@ -1,4 +1,5 @@
-import fetch, { Response } from 'node-fetch';
+const fetch = require('node-fetch');
+import { Response } from 'node-fetch';
 import KevoreeRegistryClientError from './client-error';
 
 function checkStatus(resp: Response): any {
