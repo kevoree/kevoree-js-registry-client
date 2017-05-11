@@ -37,6 +37,24 @@ export default {
 		return fetch<IDeployUnit[]>(`${baseUrl()}/api/namespaces/${namespace}/tdefs/${tdefName}/${tdefVersion}/specific-dus?${qsEncode(filters)}`);
 	},
 
+	getLatests(namespace: string, tdefName: string, tdefVersion: number) {
+		return fetch<IDeployUnit[]>(`${baseUrl()}/api/namespaces/${namespace}/tdefs/${tdefName}/${tdefVersion}/dus?version=latest`)
+	},
+
+	getReleases(namespace: string, tdefName: string, tdefVersion: number) {
+		return fetch<IDeployUnit[]>(`${baseUrl()}/api/namespaces/${namespace}/tdefs/${tdefName}/${tdefVersion}/dus?version=release`)
+	},
+
+	getLatestByPlatform(namespace: string, tdefName: string, tdefVersion: number, platform: string): Promise<IDeployUnit> {
+		return fetch<IDeployUnit[]>(`${baseUrl()}/api/namespaces/${namespace}/tdefs/${tdefName}/${tdefVersion}/dus?version=latest&platform=${platform}`)
+			.then(dus => dus[0]);
+	},
+
+	getLatestReleaseByPlatform(namespace: string, tdefName: string, tdefVersion: number, platform: string): Promise<IDeployUnit> {
+		return fetch<IDeployUnit[]>(`${baseUrl()}/api/namespaces/${namespace}/tdefs/${tdefName}/${tdefVersion}/dus?version=release&platform=${platform}`)
+			.then(dus => dus[0]);
+	},
+
 	create(namespace: string, tdefName: string, tdefVersion: number, du: IDeployUnit) {
 		return fetch<IDeployUnit>(`${baseUrl()}/api/namespaces/${namespace}/tdefs/${tdefName}/${tdefVersion}/dus`, {
 			method: 'POST',

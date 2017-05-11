@@ -92,4 +92,31 @@ describe('DeployUnits', function () {
 	it('delete a du by namespace, tdefName, tdefVersion, name, version and platform', () => {
 		return api.du.deleteByNamespaceAndTdefNameAndTdefVersionAndNameAndVersionAndPlatform('kevoree', 'Ticker', 3, 'kevoree-comp-ticker', '5.5.1', 'js');
 	});
+
+	it('retrieve all the latest dus for a namespace.Type/version', () => {
+		return api.du.getLatests('kevoree', 'Ticker', 3)
+			.then((dus) => {
+				assert.equal(dus.length, 3);
+			});
+	});
+
+	it('retrieve the latest du targetting "js" for kevoree.Ticker/3', () => {
+		return api.du.getLatestByPlatform('kevoree', 'Ticker', 3, 'js')
+			.then((du) => {
+				assert.ok(du.id);
+				assert.equal(du.name, 'kevoree-comp-ticker');
+				assert.equal(du.version, '3.1.0');
+				assert.equal(du.platform, 'js');
+			});
+	});
+
+	it('retrieve the latest release du targetting "java" for kevoree.Ticker/3', () => {
+		return api.du.getLatestReleaseByPlatform('kevoree', 'Ticker', 3, 'java')
+			.then((du) => {
+				assert.ok(du.id);
+				assert.equal(du.name, 'org.kevoree.library.java.toys');
+				assert.equal(du.version, '3.0.0');
+				assert.equal(du.platform, 'java');
+			});
+	});
 });

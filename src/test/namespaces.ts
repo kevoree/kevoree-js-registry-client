@@ -68,7 +68,7 @@ describe('Namespaces', function () {
 		return api.namespace.delete('user')
 			.catch(err => {
 				assert.ok(err);
-				assert.equal(err.response.status, 401);
+				assert.equal(err.statusCode, 401);
 			});
 	});
 });
