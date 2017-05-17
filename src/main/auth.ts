@@ -94,5 +94,11 @@ export default {
 		} else {
 			return Promise.reject(new Error(`Unable to find "user" in local config`));
 		}
+	},
+	getToken() {
+		return token();
+	},
+	isTokenExpired() {
+		return isTokenExpired();
 	}
 };
