@@ -2,28 +2,28 @@ import fetch from './util/fetch-wrapper';
 import { baseUrl, token } from './util/config';
 
 export interface IUser {
-	id: number;
-	login: string;
-	firstName: string;
-	lastName: string;
-	email: string;
-	activated: boolean;
-	langKey: string;
-	authorities: string[];
-	namespaces: string[];
-	createdBy: string;
-	createdDate: string;
-	lastModifiedBy: string;
-	lastModifiedDate: string;
+  id: number;
+  login: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  activated: boolean;
+  langKey: string;
+  authorities: string[];
+  namespaces: string[];
+  createdBy: string;
+  createdDate: string;
+  lastModifiedBy: string;
+  lastModifiedDate: string;
 }
 
 export default {
-	get() {
-		return fetch<IUser>(`${baseUrl()}/api/account`, {
-			headers: {
-				'Content-Type': 'application/json',
-				'Authorization': `Bearer ${token()}`
-			},
-		});
-	}
+  get() {
+    return fetch<IUser>(`${baseUrl()}/api/account`, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token()}`,
+      },
+    });
+  },
 };
