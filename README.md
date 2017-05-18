@@ -42,6 +42,7 @@ cd kevoree-js-registry-client
 ## Tests
 ```sh
 npm install
+npm run build
 npm test
 ```
 

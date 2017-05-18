@@ -70,6 +70,17 @@ export default {
 		});
 	},
 
+	update(du: IDeployUnit) {
+		return fetch<IDeployUnit>(`${baseUrl()}/api/namespaces/${du.namespace}/tdefs/${du.tdefName}/${du.tdefVersion}/dus/${du.name}/${du.version}/${du.platform}`, {
+			method: 'PUT',
+			headers: {
+				'Content-Type': 'application/json',
+				'Authorization': `Bearer ${token()}`
+			},
+			body: JSON.stringify(du)
+		});
+	},
+
 	delete(id: number): Promise<Response> {
 		return fetch(`${baseUrl()}/api/dus/${id}`, {
 			method: 'DELETE',

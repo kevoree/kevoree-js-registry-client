@@ -1,39 +1,25 @@
 import { assert } from 'chai';
-import * as api from '../main';
-const conf = require('tiny-conf');
-
-conf.set({
-	registry: {
-		host: 'localhost',
-		port: 8080,
-		ssl: false,
-		oauth: {
-			client_id: 'kevoree_registryapp',
-			client_secret: 'kevoree_registryapp_secret'
-		}
-	},
-	user: {
-		login: 'kevoree',
-		password: 'kevoree'
-	}
-});
+import { auth, du, IDeployUnit } from '../../main';
+import initConf from '../util/init-conf';
 
 describe('DeployUnits', function () {
 	this.slow(200);
 
+	before('init conf', initConf);
+
 	before('log user in', () => {
-		return api.auth.login();
+		return auth.login();
 	});
 
 	it('retrieve all dus', () => {
-		return api.du.all()
+		return du.all()
 			.then((dus) => {
 				assert.equal(dus.length, 17);
 			});
 	});
 
 	it('retrieve all dus by namespace, name and version', () => {
-		return api.du.getAllByNamespaceAndTdefNameAndTdefVersion('kevoree', 'Ticker', 3)
+		return du.getAllByNamespaceAndTdefNameAndTdefVersion('kevoree', 'Ticker', 3)
 			.then((dus) => {
 				assert.equal(dus.length, 6);
 				dus.forEach(du => {
@@ -45,7 +31,7 @@ describe('DeployUnits', function () {
 	});
 
 	it('retrieve a du by namespace, tdefName, tdefVersion, name, version and platform', () => {
-		return api.du.getByNamespaceAndTdefNameAndTdefVersionAndNameAndVersionAndPlatform('kevoree', 'Ticker', 3, 'kevoree-comp-ticker', '3.1.0', 'js')
+		return du.getByNamespaceAndTdefNameAndTdefVersionAndNameAndVersionAndPlatform('kevoree', 'Ticker', 3, 'kevoree-comp-ticker', '3.1.0', 'js')
 			.then((du) => {
 				assert.ok(du.id);
 				assert.ok(du.model);
@@ -64,7 +50,7 @@ describe('DeployUnits', function () {
 			dotnet: 'latest'
 		};
 
-		return api.du.getSpecificByNamespaceAndTdefNameAndTdefVersion('kevoree', 'Ticker', 3, filters)
+		return du.getSpecificByNamespaceAndTdefNameAndTdefVersion('kevoree', 'Ticker', 3, filters)
 			.then((dus) => {
 				assert.equal(dus.length, 3);
 				const js = dus.find(du => du.platform === 'js');
@@ -79,19 +65,20 @@ describe('DeployUnits', function () {
 			});
 	});
 
+	let createdDu: IDeployUnit;
 	it('create a new du', () => {
 		const newDu = {
 			name: 'kevoree-comp-ticker',
-			version: '5.5.1',
+			version: '5.5.1-alpha',
 			platform: 'js',
 			model: JSON.stringify({
 				class: 'org.kevoree.DeployUnit@kevoree-comp-ticker',
 				name: 'kevoree-comp-ticker',
-				version: '5.5.1'
+				version: '5.5.1-alpha'
 			})
 		};
 
-		return api.du.create('kevoree', 'Ticker', 3, newDu)
+		return du.create('kevoree', 'Ticker', 3, newDu)
 			.then((du) => {
 				assert.ok(du.id);
 				assert.equal(du.name, newDu.name);
@@ -100,22 +87,44 @@ describe('DeployUnits', function () {
 				assert.equal(du.tdefName, 'Ticker');
 				assert.equal(du.tdefVersion, 3);
 				assert.equal(du.namespace, 'kevoree');
+				createdDu = du;
+			});
+	});
+
+	it('update newly created du', () => {
+		createdDu.model = JSON.stringify({
+			class: 'org.kevoree.DeployUnit@kevoree-comp-ticker',
+			name: 'kevoree-comp-ticker',
+			version: '5.5.1-alpha',
+			another: 'thing in the model'
+		});
+
+		return du.update(createdDu)
+			.then((du) => {
+				assert.ok(du.id);
+				assert.equal(du.namespace, createdDu.namespace);
+				assert.equal(du.tdefName, createdDu.tdefName);
+				assert.equal(du.tdefVersion, createdDu.tdefVersion);
+				assert.equal(du.name, createdDu.name);
+				assert.equal(du.version, createdDu.version);
+				assert.equal(du.platform, createdDu.platform);
+				assert.equal(du.model, createdDu.model);
 			});
 	});
 
 	it('delete a du by namespace, tdefName, tdefVersion, name, version and platform', () => {
-		return api.du.deleteByNamespaceAndTdefNameAndTdefVersionAndNameAndVersionAndPlatform('kevoree', 'Ticker', 3, 'kevoree-comp-ticker', '5.5.1', 'js');
+		return du.deleteByNamespaceAndTdefNameAndTdefVersionAndNameAndVersionAndPlatform('kevoree', 'Ticker', 3, 'kevoree-comp-ticker', '5.5.1-alpha', 'js');
 	});
 
 	it('retrieve all the latest dus for a namespace.Type/version', () => {
-		return api.du.getLatests('kevoree', 'Ticker', 3)
+		return du.getLatests('kevoree', 'Ticker', 3)
 			.then((dus) => {
 				assert.equal(dus.length, 3);
 			});
 	});
 
 	it('retrieve the latest du targetting "js" for kevoree.Ticker/3', () => {
-		return api.du.getLatestByPlatform('kevoree', 'Ticker', 3, 'js')
+		return du.getLatestByPlatform('kevoree', 'Ticker', 3, 'js')
 			.then((du) => {
 				assert.ok(du.id);
 				assert.equal(du.name, 'kevoree-comp-ticker');
@@ -125,7 +134,7 @@ describe('DeployUnits', function () {
 	});
 
 	it('retrieve the latest release du targetting "java" for kevoree.Ticker/3', () => {
-		return api.du.getReleaseByPlatform('kevoree', 'Ticker', 3, 'java')
+		return du.getReleaseByPlatform('kevoree', 'Ticker', 3, 'java')
 			.then((du) => {
 				assert.ok(du.id);
 				assert.equal(du.name, 'org.kevoree.library.java.toys');

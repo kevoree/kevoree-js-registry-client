@@ -1,5 +1,5 @@
-export { default as account } from './account';
-export { default as auth } from './auth';
-export { default as namespace } from './namespace';
-export { default as tdef } from './tdef';
-export { default as du } from './du';
+export { default as account, IUser } from './account';
+export { default as auth, IConfigUser } from './auth';
+export { default as namespace, INamespace } from './namespace';
+export { default as tdef, ITypeDefinition } from './tdef';
+export { default as du, IDeployUnit } from './du';

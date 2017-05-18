@@ -1,39 +1,25 @@
 import { assert } from 'chai';
-import * as api from '../main';
-const conf = require('tiny-conf');
-
-conf.set({
-	registry: {
-		host: 'localhost',
-		port: 8080,
-		ssl: false,
-		oauth: {
-			client_id: 'kevoree_registryapp',
-			client_secret: 'kevoree_registryapp_secret'
-		}
-	},
-	user: {
-		login: 'kevoree',
-		password: 'kevoree'
-	}
-});
+import { auth, namespace } from '../../main';
+import initConf from '../util/init-conf';
 
 describe('Namespaces', function () {
 	this.slow(200);
 
+	before('init conf', initConf);
+
 	before('log user in', () => {
-		return api.auth.login();
+		return auth.login();
 	});
 
 	it('retrieve all namespaces', () => {
-		return api.namespace.all()
+		return namespace.all()
 			.then((namespaces) => {
 				assert.equal(namespaces.length, 2);
 			});
 	});
 
 	it('retrieve a namespace by name', () => {
-		return api.namespace.get('kevoree')
+		return namespace.get('kevoree')
 			.then((namespace) => {
 				assert.equal(namespace.name, 'kevoree');
 				assert.equal(namespace.owner, 'kevoree');
@@ -41,7 +27,7 @@ describe('Namespaces', function () {
 	});
 
 	it('create a new namespace', () => {
-		return api.namespace.create('newnamespace')
+		return namespace.create('newnamespace')
 			.then((namespace) => {
 				assert.equal(namespace.name, 'newnamespace');
 				assert.equal(namespace.owner, 'kevoree');
@@ -49,11 +35,11 @@ describe('Namespaces', function () {
 	});
 
 	it('delete a namespace', () => {
-		return api.namespace.delete('newnamespace');
+		return namespace.delete('newnamespace');
 	});
 
 	it('add a member then delete it', () => {
-		return api.namespace.addMember('kevoree', 'user')
+		return namespace.addMember('kevoree', 'user')
 			.then((namespace) => {
 				assert.equal(namespace.name, 'kevoree');
 				assert.deepEqual(namespace.members, ['kevoree', 'user']);
@@ -61,11 +47,11 @@ describe('Namespaces', function () {
 	});
 
 	it('delete a namespace member', () => {
-		return api.namespace.removeMember('kevoree', 'user');
+		return namespace.removeMember('kevoree', 'user');
 	});
 
 	it('delete a namespace not owned should fail', () => {
-		return api.namespace.delete('user')
+		return namespace.delete('user')
 			.catch(err => {
 				assert.ok(err);
 				assert.equal(err.statusCode, 401);

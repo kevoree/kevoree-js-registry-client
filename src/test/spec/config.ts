@@ -1,9 +1,12 @@
 import { assert } from 'chai';
-import { baseUrl, isTokenExpired, clientAuthorization, token } from '../main/util/config';
+import { baseUrl, isTokenExpired, clientAuthorization, token } from '../../main/util/config';
+import initConf from '../util/init-conf';
 const conf = require('tiny-conf');
 
 describe('Config', function () {
 	this.slow(200);
+
+	before('init conf', initConf);
 
 	afterEach('reset conf', () => {
 		conf.set({

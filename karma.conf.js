@@ -5,12 +5,13 @@ module.exports = function (config) {
 	config.set({
 		// frameworks to use
 		// available frameworks: https://npmjs.org/browse/keyword/karma-adapter
-		frameworks: ['mocha', 'chai', 'karma-typescript'],
+		frameworks: ['mocha', 'chai'],
 
 		// list of files / patterns to load in the browser
 		files: [
-			{ pattern: "src/main/**/*.ts" },
-			{ pattern: "src/test/**/*.ts" }
+			'node_modules/tiny-conf/dist/tiny-conf.js',
+			'build/main/index.js',
+			{ pattern: 'build/test/**/*.js' }
 		],
 
 		// list of files to exclude
@@ -19,27 +20,27 @@ module.exports = function (config) {
 		// preprocess matching files before serving them to the browser
 		// available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
 		preprocessors: {
-			'src/main/**/*.ts': ['karma-typescript', 'coverage'],
-			'src/test/**/*.ts': ['karma-typescript']
+			'build/main/index.js': ['webpack', 'sourcemap'],
+			'build/test/**/*.js': ['webpack', 'sourcemap']
 		},
 
 		// test results reporter to use
 		// possible values: 'dots', 'progress'
 		// available reporters: https://npmjs.org/browse/keyword/karma-reporter
-		reporters: ['progress', 'coverage'],
+		reporters: ['progress'],
 
-		karmaTypescriptConfig: {
-			compilerOptions: {
-				target: 'es6'
-			},
-			bundlerOptions: {
-				transforms: [require('karma-typescript-es6-transform')()]
+		webpack: {
+			devtool: 'inline-source-map',
+			externals: {
+				'./btoa': 'btoa',
+				'node-fetch': 'fetch',
+				'tiny-conf': 'TinyConf'
 			}
 		},
 
-		coverageReporter: {
-			type: 'html',
-			dir: 'build/coverage'
+		webpackMiddleware: {
+			// webpack-dev-middleware configuration
+			stats: 'errors-only'
 		},
 
 		// web server port

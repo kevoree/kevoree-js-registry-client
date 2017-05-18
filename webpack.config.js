@@ -1,7 +1,5 @@
 const { resolve } = require('path');
 
-const webpack = require('webpack');
-
 const config = {
 	entry: resolve('build', 'main', 'index.js'),
 	output: {
@@ -26,7 +24,6 @@ const config = {
 };
 
 if (process.env.NODE_ENV !== 'production') {
-	config.plugins.push(new webpack.HotModuleReplacementPlugin());
 	config.devtool = 'source-map';
 }
 

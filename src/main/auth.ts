@@ -4,13 +4,13 @@ import config, {
 } from './util/config';
 import qsEncode from './util/qs-encode';
 
-interface AOuthToken {
+export interface AOuthToken {
 	access_token: string;
 	refresh_token: string;
 	expires_in: number;
 }
 
-export interface IUser {
+export interface IConfigUser {
 	login: string;
 	password: string;
 	access_token?: string;
@@ -33,7 +33,7 @@ function oauthToken(body: {}) {
 				'Authorization': `Basic ${clientAuthorization()}`
 			},
 		}).then((data: AOuthToken) => {
-			const user: IUser = config.get('user');
+			const user: IConfigUser = config.get('user');
 			const expiredAt = new Date();
 			expiredAt.setSeconds(expiredAt.getSeconds() + data.expires_in);
 			user.access_token = data.access_token;
@@ -44,7 +44,7 @@ function oauthToken(body: {}) {
 }
 
 function createLoginRequest() {
-	const user: IUser = config.get('user');
+	const user: IConfigUser = config.get('user');
 	if (user) {
 		return oauthToken({
 			username: user.login,
@@ -80,7 +80,7 @@ export default {
 		throw new Error('api.auth.logout() is not implemented yet');
 	},
 	refresh() {
-		const user: IUser = config.get('user');
+		const user: IConfigUser = config.get('user');
 		if (user) {
 			if (user.refresh_token) {
 				return oauthToken({
