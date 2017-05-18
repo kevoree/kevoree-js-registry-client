@@ -44,6 +44,20 @@ describe('DeployUnits', function () {
 			});
 	});
 
+	it('retrieve a du by namespace, tdefName, tdefVersion, name, version and platform', () => {
+		return api.du.getByNamespaceAndTdefNameAndTdefVersionAndNameAndVersionAndPlatform('kevoree', 'Ticker', 3, 'kevoree-comp-ticker', '3.1.0', 'js')
+			.then((du) => {
+				assert.ok(du.id);
+				assert.ok(du.model);
+				assert.equal(du.namespace, 'kevoree');
+				assert.equal(du.tdefName, 'Ticker');
+				assert.equal(du.tdefVersion, 3);
+				assert.equal(du.name, 'kevoree-comp-ticker');
+				assert.equal(du.version, '3.1.0');
+				assert.equal(du.platform, 'js');
+			});
+	});
+
 	it('retrieve specific dus', () => {
 		const filters = {
 			js: '3.1.0-alpha',

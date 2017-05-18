@@ -33,6 +33,10 @@ export default {
 		return fetch<IDeployUnit[]>(`${baseUrl()}/api/namespaces/${namespace}/tdefs/${tdefName}/${tdefVersion}/dus`);
 	},
 
+	getByNamespaceAndTdefNameAndTdefVersionAndNameAndVersionAndPlatform(namespace: string, tdefName: string, tdefVersion: number, name: string, version: string, platform: string) {
+		return fetch<IDeployUnit>(`${baseUrl()}/api/namespaces/${namespace}/tdefs/${tdefName}/${tdefVersion}/dus/${name}/${version}/${platform}`);
+	},
+
 	getSpecificByNamespaceAndTdefNameAndTdefVersion(namespace: string, tdefName: string, tdefVersion: number, filters: { [key:string]: string }) {
 		return fetch<IDeployUnit[]>(`${baseUrl()}/api/namespaces/${namespace}/tdefs/${tdefName}/${tdefVersion}/specific-dus?${qsEncode(filters)}`);
 	},
