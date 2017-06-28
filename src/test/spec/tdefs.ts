@@ -36,6 +36,13 @@ describe('TypeDefinitions', function() {
       });
   });
 
+  it('retrieve latest tdefs by namespace', () => {
+    return tdef.getLatestsByNamespace('kevoree')
+      .then((tdefs) => {
+        assert.equal(tdefs.length, 5);
+      });
+  });
+
   it('retrieve a tdef by namespace, name and version', () => {
     return tdef.getByNamespaceAndNameAndVersion('kevoree', 'Ticker', 3)
       .then((tdef) => {

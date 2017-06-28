@@ -1,6 +1,6 @@
 {
   "name": "kevoree-registry-client",
-  "version": "1.0.0-alpha.9",
+  "version": "1.0.0-alpha.10",
   "description": "A library to communicate with a Kevoree registry REST API",
   "main": "build/main/index.js",
   "typings": "build/decl/index.d.ts",
